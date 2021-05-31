@@ -31,6 +31,12 @@ git clone https://github.com/arbaaz-abz/Social-Pressure-Analysis.git <br>
 cd Social-Pressure-Analysis <br>
 pip3 install -r requirements.txt 
 
+### Download Language Models
+python3 -m spacy download en
+
+$ python
+>> nltk.download('popular')
+
 ### RUNNING: 
 python3 manage.py migrate <br>
 python3 manage.py runserver <br>
