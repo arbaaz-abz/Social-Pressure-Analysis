@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Tracking POI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <style>
+        body{
+            background: #81d4fa;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #81d4fa, #01579b);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #81d4fa, #01579b); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+        .gold{
+            color:#FFD700;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="teal">
+        <div class="nav-wrapper container">
+            <a href="#" class="brand-logo"style="color:#FFD700;">&nbsp;&nbsp;&nbsp;Social Pressure Analysis</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down"></ul>
+            <div>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="#"></a></li>
+                </ul>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="{% url 'home' %}"style="color:#FFD700;">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container" style="padding-top:2%;padding-bottom:2%;">
+
+      <div class="container">
+        <div class="col s12 m6">
+          <div class="card teal darken-0">
+            <div class="card-content white-text">
+                <center><h3 class="gold">Track a Phrase</h3></center>
+                {% if error %}
+                <center style="color:brown;">{{error}}</center>
+                {% endif %}
+                <form method="POST" action="{% url 'phrase_analysis' %}">
+                    {% csrf_token %}
+                      <h5>Enter a phrase:</h5>
+                      <input type="text" name="poi" placeholder="Eg: Trump"></input>
+                      <h5>Date Range (Start-End) :</h5>
+                      <input type="date" name="date1" style="color:white;width:49%;">
+                      <input type="date" name="date2" style="color:white;width:49%;">
+                      <br><br>
+                    <center><button class="btn waves-effect waves-light" type="submit" name="submit">Get Analysis</button></center>
+                </form>
+                {% if dates_x_axis %}
+                <center><h4>Phrase: {{poi}}</h4></center>
+                <center><h6>Range: {{start_date}} - {{end_date}}</h6></center><br/>
+                <canvas id="myChart" width="600" height="400" style="background-color: white;"></canvas>
+                <br><br>
+                {% endif %}         
+                {% if dates_x_axis %}
+                <!-- <center><h6>August {{start_date}} - August {{end_date}}</h6></center><br/> -->
+                <canvas id="myChart2" width="600" height="400" style="background-color: white;"></canvas>
+                {% endif %}  
+
+            </div>
+          </div>
+        </div>
+      </div>
+            
+    </div>
+
+</body>
+
+<footer class="page-footer teal" style="bottom:0;left:0;width:100%;">
+    <div class="footer-copyright">
+        <div class="container" style="margin-left:45%;">
+            © 2019 Final Year Project
+        </div>
+    </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+{% if dates_x_axis %}
+<script>
+    var n = "{{dates_x_axis}}"
+    var newString = "";
+    flag=0
+    for(var i=0;i<n.length;i++){
+        if(n[i]=='[' || n[i]==']' || n[i]==';' || n[i]==',' || n[i]=='&' || n[i]=='#')
+            continue
+        if(n[i]=='3' && n[i+1]=='9'){
+            flag = 1
+            continue
+        }
+        if(flag==1 && n[i]=='9'){
+            flag=0
+            continue
+        }
+        if(n[i]==" "){
+            newString+="|"
+            continue
+        }
+        newString+=n[i];
+    }
+    newString+="|"
+    console.log(newString)
+    var x_axis=[];
+    word=""
+    for(var i=0;i<newString.length;i++){
+        if(newString[i]!="|"){
+            word+=newString[i];
+        }
+        else{
+            x_axis.push(word)
+            word="";
+        }
+    }
+    var weights_y_axis = {{weights_y_axis}}
+    var frequency_y_axis = {{frequency_y_axis}}
+    console.log(x_axis)
+    console.log(weights_y_axis)
+    console.log(frequency_y_axis)
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: x_axis,
+        datasets: [
+          { 
+            data: weights_y_axis,
+            label: "Twittersphere Importance",
+            borderColor: "#3e95cd",
+            fill: false
+          }
+        ]
+      },
+    });
+    var ctx = document.getElementById("myChart2");
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: x_axis,
+        datasets: [
+          { 
+            data: frequency_y_axis,
+            label: "Frequency of Usage",
+            borderColor: "#3e95cd",
+            fill: false
+          }
+        ]
+      },
+    });
+</script>
+{% endif %}
+</html>

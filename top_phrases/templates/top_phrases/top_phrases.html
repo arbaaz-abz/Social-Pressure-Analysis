@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>TRENDING TOPICS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body{
+            background: #81d4fa;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #81d4fa, #01579b);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #81d4fa, #01579b); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+        .gold{
+            color:#FFD700;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="teal">
+        <div class="nav-wrapper container">
+            <a href="#" class="brand-logo" style="color:#FFD700;">&nbsp;&nbsp;&nbsp;Social Pressure Analysis</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down"></ul>
+            <div>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="#"></a></li>
+                </ul>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="{% url 'home' %}" style="color:#FFD700;">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container" style="padding-top:1%;padding-bottom:6%;">
+
+      <div class="container">
+        <div class="col s12 m6">
+          <div class="card teal darken-0">
+            <div class="card-content white-text">
+                <center><h3 class='gold'>Find Phrases</h3></center>
+                {% if error %}
+                    <center style="color:brown;">{{error}}</center>
+                {% endif %}
+                <h5>Please choose a date:</h5>
+                <form method="POST" action="{% url 'phrases' %}">
+                    {% csrf_token %}
+                    <input type="date" name="date" style="color:white;">
+                    <center><button class="btn waves-effect waves-light" type="submit" name="submit">Find Phrases Of Interest</button></center>
+                </form>
+                <br>
+                {% if pois %}
+                <center><h6>Top Phrases for the Day : {{date}}</h6></center>
+                <ul class="collection">
+                    {% for phrase in pois %}
+                    <li><a href="#!" class="collection-item">{{phrase}}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}                
+            </div>
+          </div>
+        </div>
+      </div>
+            
+    </div>
+
+</body>
+
+<footer class="page-footer teal" style="position:fixed;bottom:0;left:0;width:100%;">
+    <div class="footer-copyright">
+        <div class="container" style="margin-left:45%;">
+            © 2019 Final Year Project
+        </div>
+    </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</html>

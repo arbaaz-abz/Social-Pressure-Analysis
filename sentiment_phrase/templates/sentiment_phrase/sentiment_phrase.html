@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>TRENDING TOPICS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <style>
+        body{
+            background: #81d4fa;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #81d4fa, #01579b);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #81d4fa, #01579b); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+        .gold{
+            color:#FFD700;
+        }
+
+        .chart-wrapper {
+          width: 520px;
+          height: 450px;
+          margin: 0 auto;
+          background-color: #81d4fa;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="teal">
+        <div class="nav-wrapper container">
+            <a href="#" class="brand-logo"style="color:#FFD700;">&nbsp;&nbsp;&nbsp;Social Pressure Analysis</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down"></ul>
+            <div>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="#"></a></li>
+                </ul>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="{% url 'home' %}"style="color:#FFD700;">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+      <div class="container" style="padding-top:1%;padding-bottom:6%;padding-left:4%;padding-right:4% ">
+        <div class="col s12">
+          <div class="card teal darken-0">
+            <div class="card-content white-text">
+                <center><h3 class='gold'>Sentiments over Phrase</h3></center>
+                {% if error %}
+                <center style="color:brown;">{{error}}</center>
+                {% endif %}
+                <form method="POST" action="{% url 'sentiment_phrase' %}">
+                    {% csrf_token %}
+                    <h5>Enter a Phrase of Interest:</h5>
+                    <input type="text" name="poi" placeholder="Eg: Trump"></input>
+                      <h5>Date Range (Start-End) :</h5>
+                      <input type="date" name="date1" style="color:white;width:49%;">
+                      <input type="date" name="date2" style="color:white;width:49%;">
+                    <br>
+                    
+                    <center><button class="btn waves-effect waves-light" type="submit" name="submit">Get Sentiments</button></center>
+                </form>
+                {% if y_axis %}
+                <center><h4 class='gold' >Phrase: {{phrase}}</h4></center>
+                <center><h6>Range: {{start_date}} - {{end_date}}</h6></center><br/>
+                <canvas id="myChart" width="600" height="400" style="background-color: white;"></canvas>
+                {% endif %}        
+
+                {% if date_usr_loca %}
+                <center><h4 class='gold' >User's with most negative Sentiments</h4></center>
+                 <center><h6 class='gold' >(Username, Location)</h6></center>
+                    {% for key,value in date_usr_loca.items %}
+                        <div class="card-content">
+                        <span class="card-title"><center class="gold"><strong>{{ key }}</strong></center></span>
+                        {% for index,usr_loca in value.items %}
+                        <ul class="collection">
+                            <li  class="collection-item" style="color:#4682B4;">{{ usr_loca }}</li>
+                        </ul>
+                        {% endfor %}
+                        </div>
+                    {% endfor %}         
+                {% endif %}  
+
+                {% if pie_data %}
+                <center><h4 class='gold'>General User Sentiments over "{{phrase}}":</h4> </center>
+                <div class="chart-wrapper">              
+                    <canvas id="myChart1"></canvas>
+                </div>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+</body>
+
+<footer class="page-footer teal" style="position:fixed;bottom:0;left:0;width:100%;">
+    <div class="footer-copyright">
+        <div class="container" style="margin-left:45%;">
+            © 2019 Final Year Project
+        </div>
+    </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+{% if y_axis %}
+<script type="text/javascript">
+    var n = "{{x_axis}}"
+    var newString = "";
+    flag=0
+    for(var i=0;i<n.length;i++){
+        if(n[i]=='[' || n[i]==']' || n[i]==';' || n[i]==',' || n[i]=='&' || n[i]=='#')
+            continue
+        if(n[i]=='3' && n[i+1]=='9'){
+            flag = 1
+            continue
+        }
+        if(flag==1 && n[i]=='9'){
+            flag=0
+            continue
+        }
+        if(n[i]==" "){
+            newString+="|"
+            continue
+        }
+        newString+=n[i];
+    }
+    newString+="|"
+    console.log(newString)
+    var x_axis=[];
+    word=""
+    for(var i=0;i<newString.length;i++){
+        if(newString[i]!="|"){
+            word+=newString[i];
+        }
+        else{
+            x_axis.push(word)
+            word="";
+        }
+    }
+    var y_axis={{y_axis}}
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: x_axis,
+        datasets: [
+          { 
+            data: y_axis,
+            label: "Sentiments",
+            borderColor: "#3e95cd",
+            fill: false
+          }
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              min: -1.0,
+              max: 1.0,
+              stepSize:10,
+            }
+          }]
+        }
+      }
+    });
+    
+    var pie_data={{pie_data}}
+
+    let ctx1 = document.getElementById('myChart1').getContext('2d');
+    let labels = ['Positive Tweets', 'Neutral Tweets', 'Negative Tweets'];
+    let colorHex = ['#FB3640', '#EFCA08', '#8B008B'];
+
+    let myChart1 = new Chart(ctx1, {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: [pie_data[0],pie_data[1],pie_data[2]],
+          backgroundColor: colorHex
+        }],
+        labels: labels
+      },
+      options: {
+        responsive: true,
+        legend: {
+          position: 'right'
+        },
+        plugins: {
+          datalabels: {
+            color: '#fff',
+            anchor: 'end',
+            align: 'start',
+            offset: -10,
+            borderWidth: 2,
+            borderColor: '#fff',
+            borderRadius: 25,
+            backgroundColor: (context) => {
+              return context.dataset.backgroundColor;
+            },
+            font: {
+              weight: 'bold',
+              size: '10'
+            },
+            formatter: (value) => {
+              return value + ' %';
+            }
+          }
+        }
+      }
+    })
+</script>
+{% endif %}
+</html>

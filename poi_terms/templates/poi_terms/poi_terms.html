@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Get Related Terms</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body{
+            background: #81d4fa;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #81d4fa, #01579b);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #81d4fa, #01579b); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+        .gold{
+            color:#FFD700;
+        }
+
+        .chart-wrapper {
+          width: 520px;
+          height: 450px;
+          margin: 0 auto;
+          background-color: #81d4fa;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="teal">
+        <div class="nav-wrapper container">
+            <a href="#" class="brand-logo"style="color:#FFD700;">&nbsp;&nbsp;&nbsp;Social Pressure Analysis</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down"></ul>
+            <div>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="#"></a></li>
+                </ul>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="{% url 'home' %}"style="color:#FFD700;">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+      <div class="container" style="padding-top:1%;padding-bottom:6%;padding-left:4%;padding-right:4% ">
+        <div class="col s12">
+          <div class="card teal darken-0">
+            <div class="card-content white-text">
+                <center><h3 class='gold'>Get related terms for an Event</h3></center>
+                {% if error %}
+                <center style="color:brown;">{{error}}</center>
+                {% endif %}
+                <form method="POST" action="{% url 'micro_model' %}">
+                    {% csrf_token %}
+                    <h5>Enter a Phrase of Interest:</h5>
+                    <input type="text" name="poi" placeholder="Eg: Trump"></input>
+                      <h5>Enter a Date:</h5>
+                      <input type="date" name="date_input" style="color:white;   ">
+                    <br>
+                    
+                    <center><button class="btn waves-effect waves-light" type="submit" name="submit">Get Related Terms</button></center>
+                </form>
+                {% if phrase %}
+                    <center><h4 class="gold">Most used TERMS along with "{{phrase}}"</h4></center>
+                    <br>
+                    <center style="font-size:1.2em;">
+                    <ul class="collection">
+                    <a class="collection-item">|
+                    {% for word in topic_words %}
+                        {{word}}|
+                    {% endfor %}
+                    </a>
+                    </ul>
+                    </center>
+                    <br>
+                    <form method="POST" action="{% url 'micro_graph' date %}">
+                        {% csrf_token %}
+                        <center><button class="btn waves-effect waves-light" type="submit" name="submit1">Analyze Topic Model</button></center>
+                    </form>
+                {% endif %}    
+            </div>
+          </div>
+        </div>
+      </div>
+
+</body>
+
+<footer class="page-footer teal" style="position:fixed;bottom:0;left:0;width:100%;">
+    <div class="footer-copyright">
+        <div class="container" style="margin-left:45%;">
+            © 2019 Final Year Project
+        </div>
+    </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</html>
+

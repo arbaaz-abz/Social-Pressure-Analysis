@@ -1,0 +1,10 @@
+spacy==2.0.18
+nltk==3.4
+pyLDAvis==2.1.2
+gensim==3.7.1
+matplotlib==3.0.2
+scipy==1.1.0
+seaborn==0.9.0
+Django==2.1.7
+reportlab==3.5.21
+numpy==1.15.4

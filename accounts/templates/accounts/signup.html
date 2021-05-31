@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Home Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style type="text/css">
+        .card{
+            width:40%;
+            margin: 0 auto;
+            padding-top: 1%;
+        }
+        body{
+            background: #81d4fa;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #81d4fa, #01579b);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #81d4fa, #01579b); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+    </style>
+</head>
+<body>
+    <nav class="teal">
+        <div class="nav-wrapper container">
+            <a href="#" class="brand-logo">&nbsp;&nbsp;&nbsp;Welcome</a>
+            <div>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                </ul>
+                 <ul class="right hide-on-med-and-down">
+                    <li><a href="{% url 'index' %}">Back</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="card white darken-1 center-align" style="margin-top:5%;">
+        <h4>SIGN-UP</h4>
+        {% if error %}
+        {{ error }}
+        <br>
+        <br>
+        {% endif %}
+        <form method="POST" action="{% url 'signup' %}">
+            {% csrf_token %}
+            USERNAME:
+            <input type="text" name="username" value="{% if username %} {{ username }} {% endif %}" style="width:50%;" ngModel/>
+            <br />
+            EMAIL:
+            <input type="email" name="email" value="{% if email %} {{ email }} {% endif %}" style="width:55%;" ngModel/>
+            <br/>
+            PASSWORD:
+            <input type="password" name="password" style="width:50%;" ngModel/>
+            <br/>
+            CONFIRM PASSWORD:
+            <input type="password" name="confirm_password" style="width:50%;" ngModel/  >
+            <br><br>
+            <button class='center-align waves-effect waves-light btn' type="submit">CREATE ACCOUNT</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <br><br>
+        </form>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</html>

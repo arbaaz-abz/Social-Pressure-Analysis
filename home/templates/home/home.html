@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Landing Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body{
+            background: #81d4fa;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #81d4fa, #01579b);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #81d4fa, #01579b); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+        .gold{
+            color:#FFD700;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="teal">
+        <div class="nav-wrapper container">
+            <a href="#" class="brand-logo" style="color:#FFD700;">&nbsp;&nbsp;&nbsp;Welcome</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down"></ul>
+            <div>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="#" onClick="document.getElementById('soForm').submit()" class="gold">Logout</a></li>
+                    <form id='soForm' method="POST" action="{% url 'logout' %}" >
+                        {% csrf_token %}
+                        <input type="hidden">
+                    </form>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container" style="padding-top:2%;">
+        <div class="row" style="margin: auto;width: 50%;">
+        <div class="card teal darken-0">
+        <div class="card-content white-text">
+                <span class="card-title"><center class="gold"><strong>Compute</strong></center></span>
+                <ul class="collection">
+                    <a href="{% url 'phrases' %}" class="collection-item">1. Generate Top Phrases</a>
+                    <a href="{% url 'macro_model' %}" class="collection-item">2. Generate Macro Topic Model</a> 
+                    <!-- <a href="{% url 'micro_model' %}" class="collection-item">3. Generate Micro Topic Model</a>  -->
+                </ul>
+                <span class="card-title"><center class="gold"><strong>Get Analysis</strong></center></span>
+                <ul class="collection">
+                    <a href="{% url 'phrase_analysis' %}" class="collection-item">1. Track a Phrase</a>
+                    <a href="{% url 'sentiment_phrase' %}" class="collection-item">2. Get Sentiments over a phrase</a>
+                    <a href="{% url 'micro_model' %}" class="collection-item">3. Get Related Terms for an event</a>
+                    <a href="{% url 'report_view' %}" class="collection-item">4. Generate a Report</a>
+                </ul>
+        </div>
+        </div>
+        </div>
+    </div>
+
+</body>
+
+<footer class="page-footer teal" style="position:fixed;bottom:0;left:0;width:100%;">
+    <div class="footer-copyright">
+        <div class="container" style="margin-left:45%;">
+            © 2019 Final Year Project
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</html>
