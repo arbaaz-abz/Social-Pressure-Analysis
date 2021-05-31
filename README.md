@@ -16,6 +16,9 @@ appearing on social media (preferably Twitter) that may be of interest due to th
 pertinence to real-world events or movements. After identifying words and phrases that
 may correspond to news or events, the social pressure is interpreted from the topic’s as weights and we also evaluate their sentiment scores over time. The results of this analysis is able to consistently detect keywords related to events before they occur, and provide valuable insight into the nature of these events. 
 
+### Final Results:
+Feel free to check out the final visualizations and results.
+![RESULTS.md](./results.md   "Final Results")
 
 ### CONFIGURING DATASET:
 For my project submission, i worked on the Travel Ban & Immigration Twitter Dataset that spans from Jan - April. This dataset is provided under directory/Generate_dataset which you can extract and play around with. If you want to use a custom dataset, make sure it conforms to the format in which the sample dataset is in.
